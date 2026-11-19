@@ -1,0 +1,169 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Renaissance Courtier Challenge</title>
+<style>
+body{font-family:system-ui,Arial;background:#f6f2e9;color:#252c2c;margin:0}
+main{max-width:780px;margin:auto;padding:24px}
+h1{color:#304d49}
+section{background:white;border:1px solid #d7d0c4;border-radius:16px;padding:20px;margin:16px 0}
+button{font:inherit;padding:12px 16px;border:2px solid #52716a;border-radius:10px;background:#fff;cursor:pointer;margin:5px;text-align:left}
+button:hover,button:focus{background:#e6f0ec}
+button.selected{background:#d7e9df}
+button:disabled{opacity:.75;cursor:default}
+.feedback{padding:12px;background:#f1f4ee;border-left:4px solid #52716a;margin-top:12px}
+small{color:#5b625f}
+.hidden{display:none}
+.progress{font-weight:700}
+#next{background:#304d49;color:white}
+ul{line-height:1.65}
+</style>
+</head>
+<body>
+<main>
+<h1>The Renaissance Courtier Challenge</h1>
+<p>Chapter 8, Day 1 • Read pages 68–72 first • About 7 minutes</p>
+
+<section id="intro">
+<h2>Your mission</h2>
+<p>Castiglione wrote about how a courtier could earn a ruler's trust and influence decisions. Investigate what made a courtier effective—and whether appearing admirable is the same as being admirable.</p>
+<p><strong>Historical thinking:</strong> Castiglione's recommendations are evidence of an ideal promoted by his book, not proof that every Renaissance courtier behaved this way.</p>
+<button id="start">Begin the challenge</button>
+</section>
+
+<section id="game" class="hidden">
+<div class="progress" id="progress"></div>
+<h2 id="heading"></h2>
+<p id="prompt"></p>
+<div id="options"></div>
+<div id="feedback" class="feedback hidden" aria-live="polite"></div>
+<button id="next" class="hidden">Next</button>
+</section>
+
+<section id="finish" class="hidden">
+<h2>Investigation complete</h2>
+<p>Castiglione's courtier needed real skills, but also knew how to be noticed. Those qualities could help someone advise a ruler, yet a polished appearance does not prove honesty or wisdom.</p>
+<p><strong>Remember:</strong> Proverbs 22:1 values a good name above riches. A genuinely good reputation grows from character, not just performance.</p>
+<button onclick="location.reload()">Try again</button>
+</section>
+</main>
+
+<script>
+const tasks=[
+{
+h:'1. Sort the evidence',
+p:'Castiglione wanted a courtier to be skilled in war, sports, music, and learning. What is the best category for these qualities?',
+o:[
+'Abilities that require learning and practice',
+'Proof that the courtier is morally trustworthy',
+'Rules about eating politely'
+],
+a:0,
+f:'These are developed abilities. They could make a courtier useful and impressive, but skill alone does not establish moral character.'
+},
+{
+h:'2. Spot the strategy',
+p:'A courtier tries to perform his boldest achievement when the ruler is watching. What is he trying to accomplish?',
+o:[
+'Avoid the ruler entirely',
+'Make his abilities visible and gain influence',
+'Prove that practice is unnecessary'
+],
+a:1,
+f:'Castiglione recognized that being noticed could help a courtier gain the ruler’s confidence. This is a strategy for managing impressions.'
+},
+{
+h:'3. Evidence or inference?',
+p:'Raphael’s portrait shows Castiglione dressed carefully and posed calmly. Which conclusion is supported directly by the portrait?',
+o:[
+'Castiglione always told the truth',
+'Castiglione was the wisest adviser in Italy',
+'The portrait presents him with a composed appearance'
+],
+a:2,
+f:'We can observe his clothing and pose. Honesty and wisdom are conclusions that need other evidence.'
+},
+{
+h:'4. Advice at court',
+p:'A ruler asks for advice about an unpopular but fair decision. Which courtier best demonstrates both useful influence and good character?',
+o:[
+'One who flatters the ruler to remain popular',
+'One who gives thoughtful, truthful advice even when it is uncomfortable',
+'One who stays silent but tries to look impressive'
+],
+a:1,
+f:'Castiglione wanted the courtier to influence the ruler through advice. From a biblical perspective, that influence should be used truthfully rather than merely to gain status.'
+},
+{
+h:'5. What can the book prove?',
+p:'The Courtier became influential in Italy, France, and England. Which historical conclusion is most careful?',
+o:[
+'Its ideals spread beyond Italy, though not everyone necessarily followed them',
+'Every European ruler adopted all its advice',
+'All courtiers were noble, graceful, and honest'
+],
+a:0,
+f:'Translation and influence show that the ideas traveled. They do not prove that everyone lived by them.'
+}
+];
+
+let i=0,answered=false;
+const $=id=>document.getElementById(id);
+
+$('start').onclick=()=>{
+$('intro').classList.add('hidden');
+$('game').classList.remove('hidden');
+show();
+};
+
+function show(){
+answered=false;
+const t=tasks[i];
+$('progress').textContent=`Challenge ${i+1} of ${tasks.length}`;
+$('heading').textContent=t.h;
+$('prompt').textContent=t.p;
+$('options').innerHTML='';
+$('feedback').classList.add('hidden');
+$('next').classList.add('hidden');
+
+t.o.forEach((v,j)=>{
+const b=document.createElement('button');
+b.textContent=v;
+b.onclick=()=>choose(j);
+$('options').appendChild(b);
+});
+}
+
+function choose(j){
+if(answered)return;
+answered=true;
+const t=tasks[i];
+
+[...$('options').children].forEach((b,k)=>{
+b.disabled=true;
+if(k===j)b.classList.add('selected');
+});
+
+$('feedback').textContent=
+(j===t.a?'Good reasoning. ':'Consider this: ')+t.f;
+$('feedback').classList.remove('hidden');
+$('next').textContent=
+i===tasks.length-1?'Finish':'Next challenge';
+$('next').classList.remove('hidden');
+}
+
+$('next').onclick=()=>{
+i++;
+if(i===tasks.length){
+$('game').classList.add('hidden');
+$('finish').classList.remove('hidden');
+}else{
+show();
+}
+};
+</script>
+</body>
+</html>
